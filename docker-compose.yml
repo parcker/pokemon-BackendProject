@@ -1,11 +1,11 @@
-version: ‘3.4’
+version: '3.4'
 services:
  
   pokemon.api:
-    image: ${DOCKER_REGISTRY-}pokemon
+    image: ${DOCKER_REGISTRY-}pokemonapi
     build:
       context: .
-      dockerfile: /src/Pokemon.Api/Dockerfile
+      dockerfile: Pokemon.Api/Dockerfile
 
   pokemoncache:
     image: redis:alpine    

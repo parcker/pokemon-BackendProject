@@ -8,36 +8,12 @@ services:
     ports:
       - "6379:6379"
 
-  basket.api:
-    container_name: basket.api
+  pokemon.api:
+    container_name: pokemon.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - "CacheSettings:ConnectionString=basketdb:6379"
-      - "GrpcSettings:DiscountUrl=http://discount.grpc"
-      - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
-      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
+      - "RedisOptions:ConnectionString=pokemoncache:6379"
     depends_on:
-      - basketdb
-      - rabbitmq
+      - pokemoncache
     ports:
       - "8001:80"
-
-
-  aspnetrunbasics:
-    container_name: aspnetrunbasics
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - "ApiSettings:GatewayAddress=http://ocelotapigw"
-      - "ElasticConfiguration:Uri=http://elasticsearch:9200"
-    depends_on:
-      - ocelotapigw
-      - catalog.api
-      - basket.api
-      - discount.api
-      - ordering.api
-    ports:
-      - "8006:80"
-
- 
-
- 
