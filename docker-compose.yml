@@ -1,9 +1,13 @@
 version: ‘3.4’
 services:
-  pokemondb:
-    image: redis
-basket.api:
-  image: ${DOCKER_REGISTRY-}pokemon
-  build:
-    context: .
-    dockerfile: src/Presentation/Pokemon.Api/Dockerfile
+ 
+  pokemon.api:
+    image: ${DOCKER_REGISTRY-}pokemon
+    build:
+      context: .
+      dockerfile: /src/Pokemon.Api/Dockerfile
+
+  pokemoncache:
+    image: redis:alpine    
+  
+

@@ -29,6 +29,8 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pokemon.UnitTest", "Pokemon.UnitTest\Pokemon.UnitTest.csproj", "{6775E7B2-7DDD-4E55-8CD3-326593133432}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EA1BDBC0-FA89-44E1-B7F0-01B14D2D3B98}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
