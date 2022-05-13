@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Pokemon.Application.Interface;
+using Pokemon.Common.BaseResponse;
 using Pokemon.Common.Constants;
 using Pokemon.Common.Exception;
 using Pokemon.Model;
@@ -24,17 +25,17 @@ namespace Pokemon.Application.Implementation
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ApiException(ErrorCodes.NotFound.POKEMON,"Invalid request input a valid pokemon name or id");
+                throw new ArgumentIsNullException(ErrorCodes.NotFound.POKEMON,"Invalid request input a valid pokemon name or id");
                 
             }
             var pokemonSpecie = await _pokemonApiService.GetPokemonSepecieAsync(name);
             if(pokemonSpecie is null)
             {
-                throw new ApiException(ErrorCodes.NotFound.POKEMON,"Invalid request input a valid pokemon name or id");
+                throw new ArgumentIsNullException(ErrorCodes.NotFound.POKEMON,"Invalid request input a valid pokemon name or id");
 
             }
-            // If this Regex expression is to be use in multiple places i would have used a static method in a static class
-            var replacement = Regex.Replace(pokemonSpecie.Description, @"\t|\n|\r", " ");
+           
+            var replacement = Regex.Replace(pokemonSpecie.Description, @"\t|\n|\r|\f", " ");
             
             var translateText = await _shakespeareTranslatorApiService.TranslateToShakespeareanAsync(replacement);
             if (string.IsNullOrEmpty(translateText)) return pokemonSpecie;

@@ -10,15 +10,16 @@ namespace Pokemon.Api.Configurations
     {
         public static void SetupRedis(this IServiceCollection services, IConfiguration configuration)
         {
-           
-            RedisOptions redisConfig = configuration.GetSection("RedisOptions").Get<RedisOptions>();
-            services.AddSingleton<RedisOptions>();
-            if (!redisConfig.Enabled)
+
+            var redisOptions = new RedisOptions();
+            configuration.GetSection(nameof(RedisOptions)).Bind(redisOptions);
+            services.AddSingleton(redisOptions);
+            if (!redisOptions.Enabled)
             {
                 return;
             }
             
-            services.AddStackExchangeRedisExtensions(redisConfig.ConnectionString);
+            services.AddStackExchangeRedisExtensions(redisOptions.ConnectionString);
 
 
         }

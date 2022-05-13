@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pokemon.CachingService;
 using Pokemon.Common.Options;
 using Pokemon.Model.CacheingModels;
+using Pokemon.Model.CachingModels;
 
 namespace Pokemon.Api.Cache
 {
@@ -32,12 +34,12 @@ namespace Pokemon.Api.Cache
             var cachedService = context.HttpContext.RequestServices.GetRequiredService<IResponseCacheService>();
             var cacheKey = GenerateCacheKeyFromRequest(context.HttpContext.Request);
             var cachedResponse = await cachedService.GetCachedResponseAsync(cacheKey);
-
             if (!string.IsNullOrEmpty(cachedResponse))
             {
+                var deserializeObjectResponse= JsonSerializer.Deserialize<CachedResponseObject>(cachedResponse);
                 var contentResult = new ContentResult
                 {
-                    Content = cachedResponse,
+                    Content = JsonSerializer.Serialize(deserializeObjectResponse?.Value),
                     ContentType= "application/json",
                     StatusCode=200
 

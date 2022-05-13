@@ -10,9 +10,14 @@ namespace Pokemon.Api.Configurations
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Pokemon swagger page", Version = "v1" });
-               
-
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "Pokemon Api", 
+                    Version = "v1",
+                    Description = "Api for retrieving pokemon"
+                    
+                });
+              
             });
         }
     }

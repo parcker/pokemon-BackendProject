@@ -1,11 +1,16 @@
 using System;
 using System.Net;
 using System.Net.Mime;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Pokemon.Common.BaseResponse;
 using Pokemon.Common.ErrorModel;
+using Pokemon.Common.Exception;
+using Pokemon.Common.Extentions;
 
 namespace Pokemon.Api.ErrorHandling
 {
@@ -42,17 +47,42 @@ namespace Pokemon.Api.ErrorHandling
                 await HandleExceptionAsync(context, ex, env);
             }
         }
-
         private static Task HandleExceptionAsync(HttpContext context, Exception exception, IWebHostEnvironment env)
-        {
-            context.Response.ContentType = MediaTypeNames.Application.Json;
-            context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            return context.Response.WriteAsync(new Error()
+        { 
+            ErrorResponse errorResponse;
+            var stackTrace = string.Empty;
+            var response = context.Response;
+            switch (exception)
             {
-                Code =  context.Response.StatusCode,
-                Message = "Internal server error"
-                
-            }.ToString());
+                case var _ when exception is ArgumentIsNullException argumentIsNullException:
+                    // argumentIsNullException error
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    errorResponse = argumentIsNullException.ChangeToError();
+                    break;
+                case var _ when exception is NotFoundException notFoundException:
+                    // not found error
+                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                    errorResponse = notFoundException.ChangeToError();
+                    break;
+                default:
+                    // unhandled error
+                    response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                    errorResponse = exception.ChangeToError();
+                    if (env.IsEnvironment("Development"))
+                    {
+                        stackTrace = exception.StackTrace;
+                    }
+                    break;
+            }
+            var error = Result.Fail(errorResponse.Errors,
+                string.IsNullOrEmpty(exception.Message) ? "Error occured" : exception.Message,
+                response.StatusCode.ToString());
+
+            var result = JsonSerializer.Serialize(error);
+
+            context.Response.ContentType = MediaTypeNames.Application.Json;
+            context.Response.StatusCode = response.StatusCode;
+            return context.Response.WriteAsync(result);
         }
     }
 }

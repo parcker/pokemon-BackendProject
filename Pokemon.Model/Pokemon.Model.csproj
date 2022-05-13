@@ -9,7 +9,7 @@
     <None Remove="PokeApiModels\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="CacheingModels\" />
+    <Folder Include="CachingModels\" />
     <Folder Include="PokeApiModels\" />
   </ItemGroup>
 </Project>

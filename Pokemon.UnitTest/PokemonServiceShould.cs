@@ -29,7 +29,7 @@ namespace Pokemon.UnitTest
             //Arrange
             var name = string.Empty;
             //Act
-            var result =await Assert.ThrowsAsync<ApiException>( () =>  _pokemonService.RetrievePokemon(name));
+            var result =await Assert.ThrowsAsync<ArgumentIsNullException>( () =>  _pokemonService.RetrievePokemon(name));
             //Assert
             result.Message.Should().Be("Invalid request input a valid pokemon name or id");
         }
@@ -42,7 +42,7 @@ namespace Pokemon.UnitTest
             _pokemonApiService.Setup(x => x.GetPokemonSepecieAsync(It.IsAny<string>())).ReturnsAsync(pokemonSpecie);
                 
             //Act
-            var result = await Assert.ThrowsAsync<ApiException>( () =>  _pokemonService.RetrievePokemon(name));
+            var result = await Assert.ThrowsAsync<ArgumentIsNullException>( () =>  _pokemonService.RetrievePokemon(name));
             //Assert
             result.Message.Should().Be("Invalid request input a valid pokemon name or id");
         }
@@ -50,15 +50,15 @@ namespace Pokemon.UnitTest
         public async Task Test_That_PokemonSpecie_Exist_But_Translation_ToShakespearean_Returns_Empty()
         {
             //Arrange
-            var name = "ditto";
+            const string name = "ditto";
             var pokemonSpecie = new PokemonSpecie()
             {
                 Name = "ditto",
                 Description = "this is my message"
             };
             _pokemonApiService.Setup(x => x.GetPokemonSepecieAsync(It.IsAny<string>())).ReturnsAsync(pokemonSpecie);
-            
-            _shakespeareTranslatorApiService.Setup(x => x.TranslateToShakespeareanAsync(It.IsAny<string>()))
+            _shakespeareTranslatorApiService.Setup(x =>
+                    x.TranslateToShakespeareanAsync(It.IsAny<string>()))
                 .ReturnsAsync(String.Empty);
                 
             //Act

@@ -27,9 +27,9 @@ namespace Pokemon.ServiceProvider.ShakespeareTranslator
 
         public async Task<string> TranslateToShakespeareanAsync(string text)
         {
-            return await TransalateAsync(text);
+            return await TranslateAsync(text);
         }
-        private async Task<string>TransalateAsync(string text)
+        private async Task<string>TranslateAsync(string text)
         {
             try {
                
@@ -37,16 +37,13 @@ namespace Pokemon.ServiceProvider.ShakespeareTranslator
                 {
                     RequestUri = new Uri(_shakespeareOption.DefaultSiteURL + _shakespeareOption.DefaultBaseURL + $"?text={text}"),
                     Method = HttpMethod.Get,
+                    
                 };
                 var httpResponse = await _httpClient.SendAsync(requestMessage);
+                
                 var jsonResponse = await httpResponse.Content.ReadAsStringAsync();
                 var deserializeObjectResponse = JsonSerializer.Deserialize<ShakespeareTranslateResponseObject>(jsonResponse);
-                if (deserializeObjectResponse is not null)
-                {
-                    
-                    return deserializeObjectResponse.Contents.Translated;
-                }
-                return string.Empty;
+                return deserializeObjectResponse is not null ? deserializeObjectResponse.Contents.Translated : string.Empty;
             }
             catch (Exception ex)
             {

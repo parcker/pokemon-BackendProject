@@ -3,24 +3,25 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pokemon.Api.Cache;
 using Pokemon.Application.Interface;
+using Pokemon.Model;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace Pokemon.Api.Controllers
 {
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class PokemonController : BaseController
     {
         private readonly IPokemonService _pokemonService;
-        public PokemonController(IPokemonService pokemonService)
-        {
-            _pokemonService = pokemonService;
-        }
+        public PokemonController(IPokemonService pokemonService)=>  _pokemonService = pokemonService;
+        
         
         [SwaggerOperation(OperationId = "get-pokemon", Summary = "Pokemon name and description")]
-        [HttpGet]
+        [HttpGet("{name}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [Cached(600)]
-        public async Task<IActionResult> Get([FromQuery] string name)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(PokemonSpecie))]
+        [Cached(60)]
+        
+        public async Task<IActionResult> Get([FromRoute]string name)
         {
 
             var pokemon= await _pokemonService.RetrievePokemon(name);
