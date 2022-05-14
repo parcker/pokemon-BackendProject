@@ -5,7 +5,7 @@ services:
     image: ${DOCKER_REGISTRY-}pokemonapi
     build:
       context: .
-      dockerfile: Pokemon.Api/Dockerfile
+      dockerfile: src/Pokemon.Api/Dockerfile
 
   pokemoncache:
     image: redis:alpine    
