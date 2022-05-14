@@ -17,7 +17,7 @@ The project objective is to develop a REST API that, given a Pokemon name, retur
 1. Install the latest [.NET 5 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
 2. Clone the repository
 3. Execute from the root folder `docker-compose build`
-4. Start everything up by executing `docker-compose up`
+4. Start everything up by executing `docker-compose up -d`
 5. Call the pokemon Http Get endpoint to localhost/api/pokemon/<pokemon name>
 6. Finish by cleaning up by executing `docker-compose down`
 
