@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -13,11 +14,12 @@ namespace Pokemon.ServiceProvider.ShakespeareTranslator
     {
         Task<string> TranslateToShakespeareanAsync(string description);
     }
-    internal sealed class ShakespeareTranslatorApiService: IShakespeareTranslatorApiService
+    internal sealed class ShakespeareTranslatorApiService: IShakespeareTranslatorApiService,IDisposable
     {
         private readonly ShakespeareOption _shakespeareOption;
-        private readonly HttpClient _httpClient;
+        private  HttpClient _httpClient;
         private readonly ILogger<ShakespeareTranslatorApiService> _logger;
+        private bool _disposed;
         public ShakespeareTranslatorApiService(IOptionsMonitor<ShakespeareOption> shakespeareOption, ILogger<ShakespeareTranslatorApiService> logger, IHttpClientFactory httpClientFactory)
         {
             _shakespeareOption = shakespeareOption.CurrentValue;
@@ -50,6 +52,23 @@ namespace Pokemon.ServiceProvider.ShakespeareTranslator
                 _logger.LogError($"Internal server error : {ex.InnerException}");
                 return default;
             }
+        }
+        [ExcludeFromCodeCoverage]
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !_disposed && _httpClient != null)
+            {
+                var localHttpClient = _httpClient;
+                localHttpClient.Dispose();
+                _httpClient = null;
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
     

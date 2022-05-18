@@ -1,8 +1,6 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Pokemon.Application.Interface;
-using Pokemon.Common.BaseResponse;
 using Pokemon.Common.Constants;
 using Pokemon.Common.Exception;
 using Pokemon.Model;
