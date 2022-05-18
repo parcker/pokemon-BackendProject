@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -16,9 +17,10 @@ namespace Pokemon.ServiceProvider.PokemonProvider
     {
         Task<PokemonSpecie> GetPokemonSepecieAsync(string pokemon);
     }
-    internal sealed class PokemonApiService: IPokemonApiService
+    internal sealed class PokemonApiService: IPokemonApiService,IDisposable
     {
-        private readonly HttpClient _httpClient;
+        private bool _disposed;
+        private HttpClient _httpClient;
         private readonly ILogger<PokemonApiService> _logger;
         private readonly PokeApiOptions _pokeApiOptions;
         public PokemonApiService(IOptionsMonitor<PokeApiOptions> pokeApiOptions, ILogger<PokemonApiService> logger, IHttpClientFactory httpClientFactory)
@@ -84,6 +86,24 @@ namespace Pokemon.ServiceProvider.PokemonProvider
                 _logger.LogError($"Internal server error : {ex.InnerException}");
                 return default;
             }
+        }
+
+        [ExcludeFromCodeCoverage]
+        private void Dispose(bool disposing)
+        {
+            if (disposing && !_disposed && _httpClient != null)
+            {
+                var localHttpClient = _httpClient;
+                localHttpClient.Dispose();
+                _httpClient = null;
+                _disposed = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

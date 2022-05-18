@@ -5,9 +5,6 @@ using System.Text.Json.Serialization;
 
 namespace Pokemon.Model.PokemonSpecies
 {
-   
-    
-
     public class FlavorTextEntry
     {
         [JsonPropertyName("flavor_text")]
@@ -19,9 +16,6 @@ namespace Pokemon.Model.PokemonSpecies
         [JsonPropertyName("version")]
         public Version Version { get; set; }
     }
-
-   
-
     public class Language
     {
         [JsonPropertyName("name")]
@@ -30,9 +24,6 @@ namespace Pokemon.Model.PokemonSpecies
         [JsonPropertyName("url")]
         public string Url { get; set; }
     }
-
-   
-
     public class PokemonSpeciesBaseResponseObject
     {
        
@@ -42,9 +33,6 @@ namespace Pokemon.Model.PokemonSpecies
 
        
     }
-
-    
-
     public class Version
     {
         [JsonPropertyName("name")]
